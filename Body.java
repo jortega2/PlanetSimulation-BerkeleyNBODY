@@ -6,9 +6,11 @@ public class Body {
 	public double yyVel;
 	public double mass;
 	public String imgFileName;
-	final static double gConstant = 6.67e-11;
+	final static double gConstant = 6.67e-11; // final = entity that can only be assigned once. No value change. 
+											// Static variable = global variable essentially
 
-	public Body (double xxPos, double yyPos, double xxVel, double yyVel, double mass, String imgFileName){
+	public Body (double xxPos, double yyPos, double xxVel, double yyVel, double mass, String imgFileName){ // signature of constructor
+		//this constructor creates a new Body and initializes body's elements with the given inputs.
 		this.xxPos = xxPos;
 		this.yyPos = yyPos;
 		this.xxVel = xxVel;
@@ -19,6 +21,7 @@ public class Body {
 	}
 
 	public Body(Body b){
+		// this constructor takes an existing body as input and creates a new copy of that body.
 		this.xxPos = b.xxPos;
 		this.yyPos = b.yyPos;
 		this.xxVel = b.xxVel;
@@ -27,7 +30,7 @@ public class Body {
 		this.imgFileName = b.imgFileName;
 	}
 
-	public double calcDistance (Body a){
+	public double calcDistance (Body a){ //O(1)
 		// r = sqrt(dx^2 + dy^2)
 		// r = distance, dx = change in x, dy = change in y
 		double dx = (a.xxPos - this.xxPos);
@@ -36,46 +39,70 @@ public class Body {
 		return Math.sqrt(Math.pow((dx),2) + Math.pow((dy), 2));
 	}
 
-	public double calcForceExertedBy (Body c){
+	public double calcForceExertedBy (Body c){//O(1)
 
 		double distance = this.calcDistance(c);
 
 		return (gConstant*this.mass*c.mass)/Math.pow(distance,2);
 	}
 
-	public double calcForceExertedByX (Body d){
+	public double calcForceExertedByX (Body d){//O(1)
 			return (this.calcForceExertedBy(d)*(d.xxPos -  this.xxPos))/this.calcDistance(d);
 		}
 
-		public double calcForceExertedByY (Body e){
+		public double calcForceExertedByY (Body e){//O(1)
 			return (this.calcForceExertedBy(e)*(e.yyPos -  this.yyPos))/this.calcDistance(e);
 		}
 
-	public double calcNetForceExertedByX (Body [] allBodys){
+	public double calcNetForceExertedByX (Body [] allBodys){// Fnet = F1+F2+....FN. O(n)
 
 		double netX = 0;
-
-			for (int i = 0; i < allBodys.length; i++){
+			//old school for loop
+			/*for (int i = 0; i < allBodys.length; i++){
 				if (this.equals(allBodys[i])){
 					continue;
 				}
 				netX += this.calcForceExertedByX(allBodys[i]);
+			}*/
+
+			//enhanced for loop
+			for (Body element : allBodys){
+				if (this.equals(element)){
+					continue;
+				}
+				netX += this.calcForceExertedByX(element);
 			}
 			return netX;
 	}
 
-	public double calcNetForceExertedByY (Body [] allBodys){
+	public double calcNetForceExertedByY (Body [] allBodys){// Fnet = F1+F2...+FN. 0(n)
 
 		double netY = 0;
 
-			for (int i = 0; i < allBodys.length; i++){
+			/*for (int i = 0; i < allBodys.length; i++){
 				if (this.equals(allBodys[i])){
 					continue;
 				}
 				netY += this.calcForceExertedByY(allBodys[i]);
+			}*/
+			for (Body element : allBodys){
+				if (this.equals(element)){
+					continue;
+				}
+				netY += this.calcForceExertedByY(element);
 			}
 			return netY;
 	}
 
+	public void update (double dt, double fX, double fY){
 
+		double accX = fX / this.mass;
+		double accY = fY / this.mass;
+
+		this.xxVel = this.xxVel + dt*accX;
+		this.yyVel = this.yyVel + dt*accY;
+
+		this.xxPos = this.xxPos + dt*this.xxVel;
+		this.yyPos = this.yyPos + dt*this.yyVel;
+	}
 }
