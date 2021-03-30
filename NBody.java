@@ -5,8 +5,10 @@ public class NBody {
 		}
 		double T = Double.parseDouble(args[0]);
 		double dt = Double.parseDouble(args[1]);
+		double time = 0;
 
 		String filename = args[2];
+
 		//radius for the universe (total size)
 		double radius = readRadius(filename);
 		//bodies for the universe (planets, sun, etc.)
@@ -15,14 +17,48 @@ public class NBody {
 		StdDraw.enableDoubleBuffering();
 		//set the scale (how big) the universe is
 		StdDraw.setScale(-radius, radius);
-		//Set background
+		/*//Set background
 		StdDraw.picture(0,0, "./images/starfield.jpg");
 		//Draw bodies(planets)
 		for (int i = 0; i < bodies.length; i++){
 			bodies[i].draw();
-		}
+		}*/
 
-		StdDraw.show();
+		while (time <= T){
+			double[] xForces = new double[bodies.length];
+			double[] yForces = new double[bodies.length];
+
+			//calculate forces
+			for (int i = 0; i < bodies.length; i++){
+				xForces[i] = bodies[i].calcNetForceExertedByX(bodies);
+				yForces[i] = bodies[i].calcNetForceExertedByY(bodies);
+			}
+			//update the bodies movement
+			for (int i = 0; i < bodies.length; i++){
+				bodies[i].update(time, xForces[i], yForces[i]);
+			}
+			//draw background
+			StdDraw.picture(0,0, "./images/starfield.jpg");
+			//draw bodies
+			for (int i = 0; i < bodies.length; i++){
+				bodies[i].draw();
+			}
+			//draw
+			StdDraw.show();
+			//pause
+			StdDraw.pause(10);
+			//increment time
+			time = time + dt;
+
+		}
+		//output data to console
+		StdOut.printf("%d\n", bodies.length);
+		StdOut.printf("%.2e\n", radius);
+		for (int i = 0; i < bodies.length; i++){
+			StdOut.printf("%11.4e %11.4e %11.4e %11.4e %11.4e %12s\n",
+							bodies[i].xxPos, bodies[i].yyPos, bodies[i].xxVel,
+							bodies[i].yyVel, bodies[i].mass, bodies[i].imgFileName);
+		}
 	}
 	public static double readRadius(String pathToFile){
 		//receives a string containing a path to file, then returns the 2nd line in that file as a double. 
