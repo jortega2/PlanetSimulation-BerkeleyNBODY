@@ -40,9 +40,9 @@ public class Body {
 	}
 
 	public double calcForceExertedBy (Body c){//O(1)
-
+		//get distance
 		double distance = this.calcDistance(c);
-
+		//(G*M1*M2)/r^2
 		return (gConstant*this.mass*c.mass)/Math.pow(distance,2);
 	}
 
@@ -50,52 +50,39 @@ public class Body {
 			return (this.calcForceExertedBy(d)*(d.xxPos -  this.xxPos))/this.calcDistance(d);
 		}
 
-		public double calcForceExertedByY (Body e){//O(1)
-			return (this.calcForceExertedBy(e)*(e.yyPos -  this.yyPos))/this.calcDistance(e);
-		}
+	public double calcForceExertedByY (Body e){//O(1)
+		return (this.calcForceExertedBy(e)*(e.yyPos -  this.yyPos))/this.calcDistance(e);
+	}
 
 	public double calcNetForceExertedByX (Body [] allBodys){// Fnet = F1+F2+....FN. O(n)
 
 		double netX = 0;
-			//old school for loop
-			/*for (int i = 0; i < allBodys.length; i++){
-				if (this.equals(allBodys[i])){
-					continue;
-				}
-				netX += this.calcForceExertedByX(allBodys[i]);
-			}*/
-
 			//enhanced for loop
-			for (Body element : allBodys){
-				if (this.equals(element)){
-					continue;
-				}
-				netX += this.calcForceExertedByX(element);
+		for (Body element : allBodys){
+			if (this.equals(element)){
+				continue;
 			}
-			return netX;
+			netX += this.calcForceExertedByX(element);
+		}
+		return netX;
 	}
 
 	public double calcNetForceExertedByY (Body [] allBodys){// Fnet = F1+F2...+FN. 0(n)
 
 		double netY = 0;
 
-			/*for (int i = 0; i < allBodys.length; i++){
-				if (this.equals(allBodys[i])){
-					continue;
-				}
-				netY += this.calcForceExertedByY(allBodys[i]);
-			}*/
-			for (Body element : allBodys){
-				if (this.equals(element)){
-					continue;
-				}
-				netY += this.calcForceExertedByY(element);
+		for (Body element : allBodys){
+			if (this.equals(element)){
+				continue;
 			}
-			return netY;
+			netY += this.calcForceExertedByY(element);
+		}
+		return netY;
 	}
 
 	public void update (double dt, double fX, double fY){
-
+		//update a bodies acceleration, velocity, and position as they change 
+		//due to time (dt), external force (fX and fY)
 		double accX = fX / this.mass;
 		double accY = fY / this.mass;
 
@@ -107,6 +94,7 @@ public class Body {
 	}
 
 	public void draw(){
+		//stores the image that will represent the body when drawn
 		StdDraw.picture(xxPos,yyPos, "./images/" + imgFileName);
 	}
 }
