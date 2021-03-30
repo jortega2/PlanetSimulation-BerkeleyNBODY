@@ -1,4 +1,29 @@
 public class NBody {
+	public static void main(String[] args){
+		if (args.length < 2){
+			System.out.println("Please supply a filename as a command line");
+		}
+		double T = Double.parseDouble(args[0]);
+		double dt = Double.parseDouble(args[1]);
+
+		String filename = args[2];
+		//radius for the universe (total size)
+		double radius = readRadius(filename);
+		//bodies for the universe (planets, sun, etc.)
+		Body[] bodies = readBodies(filename);
+
+		StdDraw.enableDoubleBuffering();
+		//set the scale (how big) the universe is
+		StdDraw.setScale(-radius, radius);
+		//Set background
+		StdDraw.picture(0,0, "./images/starfield.jpg");
+		//Draw bodies(planets)
+		for (int i = 0; i < bodies.length; i++){
+			bodies[i].draw();
+		}
+
+		StdDraw.show();
+	}
 	public static double readRadius(String pathToFile){
 		//receives a string containing a path to file, then returns the 2nd line in that file as a double. 
 		In in = new In(pathToFile);
