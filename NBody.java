@@ -17,13 +17,9 @@ public class NBody {
 		StdDraw.enableDoubleBuffering();
 		//set the scale (how big) the universe is
 		StdDraw.setScale(-radius, radius);
-		/*//Set background
-		StdDraw.picture(0,0, "./images/starfield.jpg");
-		//Draw bodies(planets)
-		for (int i = 0; i < bodies.length; i++){
-			bodies[i].draw();
-		}*/
 
+		//==================Animation============================
+		//=======================================================
 		while (time <= T){
 			double[] xForces = new double[bodies.length];
 			double[] yForces = new double[bodies.length];
@@ -35,7 +31,7 @@ public class NBody {
 			}
 			//update the bodies movement
 			for (int i = 0; i < bodies.length; i++){
-				bodies[i].update(time, xForces[i], yForces[i]);
+				bodies[i].update(dt, xForces[i], yForces[i]);
 			}
 			//draw background
 			StdDraw.picture(0,0, "./images/starfield.jpg");
@@ -75,12 +71,10 @@ public class NBody {
 	public static Body[] readBodies(String pathToFile){
 		//receives a string containing a path to a file, then creates and returns an array of bodies using data from the file. 
 		In in = new In(pathToFile);
-
-		int size = in.readInt();//first line of file contains the amount of planets as an integer.
-
-		Body[] bodies = new Body[size];
-
-		in.readDouble();//skip radius
+		//first line of file contains the amount of planets as an integer.
+		int size = in.readInt();
+		//skip radius
+		in.readDouble();
 
 		for (int i = 0; i < size; i++){
 			bodies[i] = new Body(in.readDouble(), in.readDouble(), in.readDouble(), in.readDouble(), in.readDouble(), in.readString());

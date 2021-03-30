@@ -47,8 +47,8 @@ public class Body {
 	}
 
 	public double calcForceExertedByX (Body d){//O(1)
-			return (this.calcForceExertedBy(d)*(d.xxPos -  this.xxPos))/this.calcDistance(d);
-		}
+		return (this.calcForceExertedBy(d)*(d.xxPos -  this.xxPos))/this.calcDistance(d);
+	}
 
 	public double calcForceExertedByY (Body e){//O(1)
 		return (this.calcForceExertedBy(e)*(e.yyPos -  this.yyPos))/this.calcDistance(e);
